@@ -1,0 +1,643 @@
+<aura:component controller="CatalogOrderControllerNew" implements="lightning:isUrlAddressable,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <!-- New Attributes added by selva for store recommended product name-->
+    <aura:attribute name="firstname" type="String" /> 
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+     <aura:attribute name="isVisionPopup" type="Boolean" default="false"/>
+    <aura:attribute name="RecImgUrl" type="string" default="https://510001482.recs.igodigital.com/rr/v2/5f0d7e395a3ade0034483f69/i/" />
+    <aura:attribute name="RecHrefUrl" type="string" default="https://510001482.recs.igodigital.com/rr/v2/5f0d7e395a3ade0034483f69/l/" />
+
+    <aura:attribute name="RecImgUrl1" type="string" default="https://510001482.recs.igodigital.com/rr/v2/5f0d7e395a3ade0034483f69/i/1/" />
+     <aura:attribute name="RecImgUrl2" type="string" default="https://510001482.recs.igodigital.com/rr/v2/5f0d7e395a3ade0034483f69/i/2/" />
+     <aura:attribute name="RecImgUrl3" type="string" default="https://510001482.recs.igodigital.com/rr/v2/5f0d7e395a3ade0034483f69/i/3/" />
+     <aura:attribute name="RecImgUrl4" type="string" default="https://510001482.recs.igodigital.com/rr/v2/5f0d7e395a3ade0034483f69/i/4/" />
+    <aura:attribute name="RecHrefUrl1" type="string" default="https://510001482.recs.igodigital.com/rr/v2/5f0d7e395a3ade0034483f69/l/1/" />
+     <aura:attribute name="RecHrefUrl2" type="string" default="https://510001482.recs.igodigital.com/rr/v2/5f0d7e395a3ade0034483f69/l/2/" />
+     <aura:attribute name="RecHrefUrl3" type="string" default="https://510001482.recs.igodigital.com/rr/v2/5f0d7e395a3ade0034483f69/l/3/" />
+     <aura:attribute name="RecHrefUrl4" type="string" default="https://510001482.recs.igodigital.com/rr/v2/5f0d7e395a3ade0034483f69/l/4/" />
+      
+    <aura:handler event="c:CatalogorderEvent" action="{!c.getEmail}"/>
+      <aura:attribute name="ShowRec" type="Boolean" default="false"/>
+    <aura:attribute name="vfHost" type="String"
+            default="techkasetti--chat--c.visualforce.com"/>
+    <!-- New Attributes for Vision -->
+   <aura:attribute name="FileList" type="Object"/>
+    <aura:attribute name="pictureSrc" type="String" />
+    <aura:attribute name="Label1" type="String" />
+    
+      <!-- The Visualforce page to send data to 
+    <iframe aura:id="vfFrame" src="{!'https://' + v.vfHost + '/apex/ProductRecommnedation'}" width="50%" height="50%"/>
+    -->
+    <!-- New Attributes added by Varun-->
+    <aura:attribute name="displayVertical" type="Boolean" default="false"/>
+    <aura:method name="rerenderCartCount" action="{!c.cartCount}" />
+    
+    <!--Declare Attributes-->
+    <aura:attribute name="parentcmp" type="Boolean" default="true"/>
+    <aura:attribute name="careLabelOrder" type="boolean"/>
+    <aura:attribute name="displayPagination" type="Boolean" default="true"/>
+    <aura:attribute name="cartFlag" type="boolean" default="false"/>
+    <aura:attribute name="isSelectAll" type="boolean" default="false"/>
+    <aura:attribute name="isShipcmp" type="boolean" default="false"/>
+    <aura:attribute name="isSearch" type="boolean" default="false" description="to differentiate between search and normal catalog"/>
+    <aura:attribute name="quickView" type="boolean" default="false"/>
+    <!--Order to company and prefererred currency-->
+    <aura:attribute name="selectedCompany" type="string"/>
+    <aura:attribute name="selectedCurrency" type="string"/>
+    <aura:attribute name="listOfCompanies" type="List"/>
+    <aura:attribute name="listOfCurrency" type="List"/>
+    <!--<aura:attribute name="completeWrap" type="object" />-->
+    <aura:attribute name="completeWrap" type="List" />   
+    <!--Search Product-->
+    <aura:attribute name="searchKeyword" type="string" description="search product by name"/>
+    <!--Retailer -->
+    <aura:attribute name="SelectedRetailer" type="String" description="retailer Code Name"/> 
+    <aura:attribute name="SelectedRetailercode" type="String" description="retailer Code Id"/> 
+    <aura:attribute name="onselectcustomeid" type="String" /> 
+    <aura:attribute name="selectedTab" type="String" default="Hanger Business"/>
+    <!--Pagination -->
+    <aura:attribute name="pageNumber" type="Integer" default="1"/>
+    <aura:attribute name="pageSize" type="Integer" default="10"/>
+    <aura:attribute name="isLastPage" type="Boolean" default="false"/>
+    <aura:attribute name="dataSize" type="Integer" default="0"/> 
+    
+    <!--<aura:handler event="c:PageChange" action="{!c.pageChange}"/>-->
+    <aura:attribute name="page" type="integer" default="1" description="current page number"/>
+    <aura:attribute name="pages" type="integer" description="Number of Page"/>
+    <aura:attribute name="total" type="integer"/>
+    
+    <!--<aura:handler name="CatalogEvent" event="c:CatalogEvent" action="{!c.handleCatalogEvent}"/>-->
+    
+    <!--Product Family-->
+    <aura:attribute name="fieldList" type="String[]"/>
+    <aura:attribute name="selectedFamily" type="String"/>
+    
+    <aura:attribute name="bulkAddData" type="String"/>
+    <aura:attribute name="viewbulk" type="Boolean" default="true"/>
+   <aura:attribute name="RecPro" type="Boolean" default="false"/>
+    
+    <aura:attribute name="flagFamily" type="Boolean" default="true"/>
+    <aura:attribute name="sizerhanger" type="Boolean" default="false"/>
+    <aura:attribute name="hangerListDetail" type="Boolean" default="false"/>
+    <aura:attribute name="catalogVertical" type="Boolean" default="true" />
+    <aura:attribute name="CartCount" type="integer"/>
+    
+    
+    <!--declare events hendlers-->  
+    <aura:handler name="CustomProductSearchResultsEvent" event="c:CustomerSearchResultsEvent" action="{!c.handleComponentEvent}"/>
+    <aura:attribute name="selectedRecord" type="sObject" default="{}" description="Use,for store SELECTED sObject Record"/>
+    <aura:attribute name="listOfSearchRecords" type="List" description="Use,for store the list of search records which returns from apex class"/>
+    <!--<aura:attribute name="SearchKeyWord" type="string"/>-->
+    <aura:attribute name="objectAPIName" type="string" default=""/>
+    <aura:attribute name="IconName" type="string" default=""/>
+    <aura:attribute name="label" type="string" default=""/>
+    <aura:attribute name="Message" type="String" default=""/>
+    
+    <aura:attribute name="keyWordList" type="String[]"/>
+    
+    <!--Tracking code-->
+    <aura:registerEvent name="formSubmitSearch" type="c:FormSubmitforSearch"/>
+    <aura:attribute name="newId" type="String" />
+    
+    <!-- Content-Security-Policy-->
+    <meta http-equiv="Content-Security-Policy" content="default-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src	'self' 'unsafe-inline' *; img-src 'self' data: *"/>
+    <!--Spinner Start-->
+    <aura:attribute name="showSpinner" type="Boolean" default="false" />
+    <aura:if isTrue="{!v.showSpinner}">    
+        <lightning:spinner class="slds-is-fixed" variant="brand" alternativeText="Loading" size="large" />
+    </aura:if>
+    <lightning:spinner variant="brand" size="large" aura:id="Id_spinner" class="slds-hide" />
+    <!--Spinner End-->
+    <div class="cart-button-group">        
+        <aura:If isTrue="{!v.parentcmp}">
+            <!--<aura:If isTrue="{!v.viewbulk}">
+                <lightning:button label="ADD TO CART" onclick="{!c.bulkAdd}" class="view-cart1 slds-m-left_x-small" iconName="utility:add"/> 
+            </aura:If>-->
+            <lightning:button label="VIEW CART" onclick="{!c.Shipcmp}" class="view-cart1 slds-m-left_x-small" iconName="utility:cart"/> 
+            <lightning:badge label="{!v.CartCount}" id="Cartcount" value="{!v.CartCount}" class="cart-number"/>            
+        </aura:If>
+    </div>
+    <div>
+        <aura:If isTrue="{!v.parentcmp}">  
+            <!--Tabset Start -->
+            <lightning:tabset aura:id="tabs" selectedTabId="{!v.selectedTab}">
+                <lightning:tab label="Products" id="Hanger Business" onactive="{!c.selectTab}" iconName="standard:stage_collection">
+                    <div class="slds-grid slds-p-bottom_small" style="border-bottom:2px solid #e0e0e0"> 
+                        <div class="slds-col slds-m-right_medium" style="width:30%;">
+                            <h2 class="tab-header"><b>Product List</b></h2>
+                            
+                        </div>                        
+                        
+                        <!--<div class="slds-col slds-m-right_medium slds-m-top_large">
+                            <button class="slds-button slds-button_destructive slds-button_red" type="button" onclick="{!c.UploadImage}"><span>UploadImage</span></button>
+                        </div>-->
+                        
+                        <!--<div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <aura:If isTrue="{!v.cartFlag}">  
+                                <lightning:input value="{!v.selectedCompany}" disabled="true" label="Order To Company"/>
+                                <aura:set attribute="else"> 
+                                    <lightning:select name="select1"  value="{!v.selectedCompany}" label="Order To Company*" onchange="{!c.OrderToCompany}">
+                                        <option value="NULL" text="NONE"></option>
+                                        <aura:iteration items="{!v.listOfCompanies}" var="fld" >
+                                            <option value="{!fld}" text="{!fld}"></option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </aura:set>
+                            </aura:If>
+                        </div>
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <aura:If isTrue="{!v.cartFlag}"> 
+                                <lightning:input value="{!v.selectedCurrency}" disabled="true" label="Preferred Currency"/>
+                                <aura:set attribute="else">
+                                    <lightning:select name="select1"  value="{!v.selectedCurrency}" label="Preferred Currency*" onchange="{!c.preferredCurrency}">
+                                        <option value="NULL" text="NONE"></option>
+                                        <aura:iteration items="{!v.listOfCurrency}" var="fld" >
+                                            <option value="{!fld}" text="{!fld}" selected="{!fld==v.selectedCurrency}"></option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </aura:set>
+                            </aura:If>
+                        </div>
+                        <aura:If isTrue="{!v.flagFamily}">
+                            <div class="slds-col slds-m-right_medium" style="width:16%;">
+                                <lightning:select name="select1"  value="{!v.selectedFamily}" label="Family">
+                                    <option value="NULL" text="NONE"></option>
+                                    <aura:iteration items="{!v.fieldList}" var="fld" >
+                                        <option value="{!fld}" text="{!fld}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div>   
+                        </aura:If>--><div class="slds-col slds-m-right_medium" style="width:16%;">
+                                                  <!--    <c:WebRecommendationDisplay></c:WebRecommendationDisplay> -->
+                        </div>
+
+                          <div class="slds-col slds-m-right_medium" style="width:16%;">
+                          
+                              
+                              <lightning:input value="{!v.searchKeyword}"
+                                             type="Search"
+                                             label="Keywords"
+                                             aura:id="searchField"
+                                             onchange="{!c.showRec}"
+                                             />
+                                <!-- The Visualforce page to send data to
+                 <aura:If isTrue="{!v.RecPro}">             
+           <iframe aura:id="vfFrame" src="{!'https://' + v.vfHost + '/apex/AudoProRec'}" width="100%" height="50%"/>
+                              </aura:If> -->
+                        </div>  
+
+                        <div class="slds-col slds-m-right_medium slds-m-top_large">
+                            <button id="search1" class="slds-button slds-button_destructive slds-button_red" type="button"  onclick="{!c.Search}"><span>Search</span></button>
+                            <button id="Vision" class="slds-button slds-button_destructive slds-button_red" type="button"  onclick="{!c.vision}"><span>Product Search by image </span></button>
+                        </div> 
+                        
+                        
+                       <!-- <div onmouseleave="{!c.onblur}" aura:id="searchRes" class="slds-form-element slds-lookup slds-is-close" data-select="single">
+                            <label class="slds-form-element__label" for="lookup-348">{!v.label}</label>
+                           
+                            <div class="slds-form-element__control">
+                                
+                                <div class="slds-input-has-icon slds-input-has-icon-right">
+                                   
+                                    <div aura:id="lookup-pill" class="slds-pill-container slds-hide">
+                                        <lightning:pill class="pillSize" label="{!v.selectedRecord.Name}" name="{!v.selectedRecord.Name}" onremove="{! c.clear }">
+                                            <aura:set attribute="media">
+                                                <lightning:icon iconName="{!v.IconName}" size="x-small" alternativeText="{!v.IconName}"/>
+                                            </aura:set>
+                                        </lightning:pill>
+                                    </div>
+                                    <div aura:id="lookupField" class="slds-show">
+                                        <lightning:icon class="slds-input__icon slds-show" iconName="utility:search" size="x-small" alternativeText="search"/>
+                                        <span class="slds-icon_container  slds-combobox__input-entity-icon" title="record">
+                                            <lightning:icon class="slds-icon slds-icon slds-icon_small slds-icon-text-default" iconName="{!v.IconName}" size="x-small" alternativeText="icon"/>
+                                            <span class="slds-assistive-text"></span>
+                                        </span>
+                                        <ui:inputText click="{!c.onfocus}" updateOn="keyup" keyup="{!c.keyPressController}" class="slds-lookup__search-input slds-input leftPaddingClass" value="{!v.SearchKeyWord}" placeholder="search.."/>
+                                    </div>   
+                                </div>
+                            </div>
+                            
+                            <ul style="min-height:40px;margin-top:0px !important" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
+                                <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
+                                <center> {!v.Message}</center>
+                                <aura:iteration items="{!v.listOfSearchRecords}" var="singleRec">
+                                    <c:CustomLookupforProductSearch oRecord="{!singleRec}" IconName="{!v.IconName}"/>
+                                </aura:iteration>
+                            </ul>
+                        </div>-->
+                       <!-- <div class="slds-col slds-m-right_medium slds-m-top_large">
+                            <button class="slds-button slds-button_destructive slds-button_red" type="button" onclick="{!c.Search}"><span>Search</span></button>
+                        </div> -->
+                    </div> 
+                    
+                    
+                    
+                    <!--<c:CatalogVertical aura:id="hangerBulkaddId" flagFamily="{!v.flagFamily}" parentcmp="{!v.parentcmp}"
+                        catalogVertical="{!v.catalogVertical}" completeWrap="{!v.completeWrap.productList}"
+                        onselectcustomeid="{!v.onselectcustomeid}" SelectedRetailerName="{!v.SelectedRetailer}"
+                        SelectedRetailerId="{!v.SelectedRetailercode}" selectedTab="{!v.selectedTab}"
+                        selectedCompany="{!v.selectedCompany}" selectedCurrency="{!v.selectedCurrency}"
+                        sizerhanger="{!v.sizerhanger}" hangerListDetail="{!v.hangerListDetail}"
+                        displayPagination="{!v.displayPagination}" />-->
+                          
+        
+        
+        
+        
+         <aura:if isTrue="{!v.isVisionPopup}">
+
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{!c.closeModel}"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Upload Image</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <!--inside popup-->
+                    
+                    <lightning:card title="">
+                        <div class="box">
+                            
+                            <div class="slds-m-bottom_small" align="center">
+                    <lightning:input aura:id="file-input" type="file" files="{!v.FileList}" label="" name="file" multiple="true" onchange="{! c.handleFilesChange }"/>
+            
+					<!--<lightning:input aura:id="fileInput" type="file" name="file" multiple="false" accept="image/*;capture=camera" files="{!v.files}"
+					onchange="{! c.readFile }" label="Image (max. 5MB):" />  -->
+        
+				</div> 
+                        </div>
+                    </lightning:card>
+                </div>
+                
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        
+    </aura:if>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <aura:If isTrue="{!v.displayVertical}">
+                        
+                        <tr> <td>
+                            <lightning:button label="" iconName="utility:chevronleft" iconPosition="left" class="slds-align_absolute-buttom"  
+                                              onclick="{!c.handlePrev}" disabled="{! v.pageNumber == 1}"/>
+                            </td><td style ="width:1400px">
+                            <c:CatalogVertical aura:id="hangerBulkaddId" onselectcustomeid="{!v.onselectcustomeid}"
+                                               flagFamily="{!v.flagFamily}" parentcmp="{!v.parentcmp}"
+                                               catalogVertical="{!v.catalogVertical}" completeWrap="{!v.completeWrap}"
+                                               selectedTab="{!v.selectedTab}" displayPagination="{!v.displayPagination}" />
+                            </td><td>
+                            <div> 
+                                
+                                
+                                
+                                
+                                
+                                <lightning:button label="" iconName="utility:chevronright" iconPosition="right" class="slds-align_absolute-buttom"
+                                                  disabled="{! v.isLastPage}" onclick="{!c.handleNext}"/>
+                            </div></td></tr><div>
+                        <p class="slds-page-header__title">Page {!v.pageNumber} | Showing records from {! ((v.pageNumber-1)*v.pageSize)+' to '+((v.pageNumber-1)*v.pageSize+v.dataSize)}</p>
+                        </div>
+                    </aura:If>
+                   
+
+                </lightning:tab>
+                
+            <!--    
+the result is {!v.newId}
+                <table>
+                    <tbody><h1 style ="font-size:1.5rem"><b>Recommended Items</b></h1>
+                        <h3>Similar to Items You Viewed
+                        </h3>
+                        <tr>
+                            <td>      <a href="{!v.RecProUrl1}">
+                                <img src="{!v.RecProImg1}"></img>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{!v.RecProUrl2}">
+                                    
+                                    <img src="{!v.RecProImg2}"/>
+                                </a> </td>
+                            <td>
+                                <a href="{!v.RecProUrl3}">
+                                    
+                                    <img src="{!v.RecProImg3}"/>
+                                </a>   </td>
+                            <td>
+                                <a href="{!v.RecProUrl4}">
+                                    
+                                    <img src="{!v.RecProImg4}"/>
+                                </a>  </td>
+                        </tr>
+                    </tbody></table>
+               -->
+                <!--LABELS AND TICKETS Start -->
+                <!--<<lightning:tab label="LABELS AND TICKETS" id="Labels &amp; Tickets"  onactive="{!c.selectTab}" iconName="standard:omni_supervisor">   
+                    <div class="slds-grid slds-p-bottom_small" style="border-bottom:2px solid #e0e0e0"> 
+                        <div class="slds-col slds-m-right_medium" style="width:30%;">
+                            <h2 class="tab-header"><b>Retailer Name : </b>{!v.SelectedRetailer}</h2>
+                            
+                        </div>
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <aura:If isTrue="{!v.cartFlag}">  
+                                <lightning:input value="{!v.selectedCompany}" disabled="true" label="Order To Company"/>
+                                <aura:set attribute="else"> 
+                                    <lightning:select name="select1"  value="{!v.selectedCompany}" label="Order To Company*" onchange="{!c.OrderToCompany}">
+                                        <option value="NULL" text="NONE"></option>
+                                        <aura:iteration items="{!v.listOfCompanies}" var="fld" >
+                                            <option value="{!fld}" text="{!fld}"></option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </aura:set>
+                            </aura:If>
+                        </div>
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <aura:If isTrue="{!v.cartFlag}"> 
+                                <lightning:input value="{!v.selectedCurrency}" disabled="true" label="Preferred Currency"/>
+                                <aura:set attribute="else">
+                                    <lightning:select name="select1"  value="{!v.selectedCurrency}" label="Preferred Currency*" onchange="{!c.preferredCurrency}">
+                                        <option value="NULL" text="NONE"></option>
+                                        <aura:iteration items="{!v.listOfCurrency}" var="fld" >
+                                            <option value="{!fld}" text="{!fld}" selected="{!fld==v.selectedCurrency}"></option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </aura:set>
+                            </aura:If>
+                        </div>
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <lightning:select name="select1"  value="{!v.selectedFamily}" label="Family">
+                                <option value="NULL" text="NONE"></option>
+                                <aura:iteration items="{!v.fieldList}" var="fld" >
+                                    <option value="{!fld}" text="{!fld}"></option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>    
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <lightning:input value="{!v.searchKeyword}"
+                                             type="Search"
+                                             label="Keywords"
+                                             aura:id="searchField"
+                                             />
+                        </div>
+                        <div class="slds-col slds-m-right_medium slds-m-top_large">
+                            <button class="slds-button slds-button_destructive slds-button_red" type="button" onclick="{!c.Search}"><span>Search</span></button>
+                        </div>
+                    </div>   
+                    <c:CatalogVertical aura:id="labelBulkaddId" careLabelOrder="{!v.careLabelOrder}" displayPagination="{!v.displayPagination}" quickview="{!v.quickView}" catalogVertical="{!v.catalogVertical}" completeWrap="{!v.completeWrap.productList}"  onselectcustomeid="{!v.onselectcustomeid}" SelectedRetailerName="{!v.SelectedRetailer}" SelectedRetailerId="{!v.SelectedRetailercode}" selectedTab="{!v.selectedTab}" hangerListDetail="{!v.hangerListDetail}"/>
+                </lightning:tab>-->
+                <!--LABELS AND TICKETS End -->
+                <!--POLYBAGS Start -->
+                <!--<lightning:tab label="FLEXIBLE PACKAGING" id="Flexible Packaging" onactive="{!c.selectTab}"  iconName="standard:macros">
+                    <div class="slds-grid slds-p-bottom_small" style="border-bottom:2px solid #e0e0e0"> 
+                        <div class="slds-col slds-m-right_medium" style="width:30%;">
+                            <h2 class="tab-header"><b>Retailer Name : </b>{!v.SelectedRetailer}</h2>
+                        </div>
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <aura:If isTrue="{!v.cartFlag}">  
+                                <lightning:input value="{!v.selectedCompany}" disabled="true" label="Order To Company"/>
+                                <aura:set attribute="else"> 
+                                    <lightning:select name="select1"  value="{!v.selectedCompany}" label="Order To Company*" onchange="{!c.OrderToCompany}">
+                                        <option value="NULL" text="NONE"></option>
+                                        <aura:iteration items="{!v.listOfCompanies}" var="fld" >
+                                            <option value="{!fld}" text="{!fld}"></option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </aura:set>
+                            </aura:If>
+                        </div>
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <aura:If isTrue="{!v.cartFlag}"> 
+                                <lightning:input value="{!v.selectedCurrency}" disabled="true" label="Preferred Currency"/>
+                                <aura:set attribute="else">
+                                    <lightning:select name="select1"  value="{!v.selectedCurrency}" label="Preferred Currency*" onchange="{!c.preferredCurrency}">
+                                        <option value="NULL" text="NONE"></option>
+                                        <aura:iteration items="{!v.listOfCurrency}" var="fld" >
+                                            <option value="{!fld}" text="{!fld}" selected="{!fld==v.selectedCurrency}"></option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </aura:set>
+                            </aura:If>
+                        </div>
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <lightning:select name="select1"  value="{!v.selectedFamily}" label="Family">
+                                <option value="NULL" text="NONE"></option>
+                                <aura:iteration items="{!v.fieldList}" var="fld" >
+                                    <option value="{!fld}" text="{!fld}"></option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>   
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <lightning:input value="{!v.searchKeyword}"
+                                             type="Search"
+                                             label="Keywords"
+                                             aura:id="searchField"
+                                             />
+                        </div>  
+                        <div class="slds-col slds-m-right_medium slds-m-top_large">
+                            <button class="slds-button slds-button_destructive slds-button_red" type="button" onclick="{!c.Search}"><span>Search</span></button>
+                        </div>
+                    </div> 
+                    <c:CatalogVertical aura:id="fexyBulkaddId" completeWrap="{!v.completeWrap.productList}" catalogVertical="{!v.catalogVertical}" onselectcustomeid="{!v.onselectcustomeid}" SelectedRetailerName="{!v.SelectedRetailer}" SelectedRetailerId="{!v.SelectedRetailercode}" selectedTab="{!v.selectedTab}"  displayPagination="{!v.displayPagination}"/>
+                </lightning:tab>-->
+                <!--POLYBAGS End-->
+                
+                <!--EAS AND RFID Start-->
+                <!--<lightning:tab label="EAS AND RFID" id="EAS &amp; RFID"  onactive="{!c.selectTab}" iconName="standard:macros">  
+                    <div class="slds-grid slds-p-bottom_small" style="border-bottom:2px solid #e0e0e0"> 
+                        <div class="slds-col slds-m-right_medium" style="width:30%;">
+                            <h2 class="tab-header"><b>Retailer Name : </b>{!v.SelectedRetailer}</h2>
+                            
+                        </div>
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <aura:If isTrue="{!v.cartFlag}">  
+                                <lightning:input value="{!v.selectedCompany}" disabled="true" label="Order To Company"/>
+                                <aura:set attribute="else"> 
+                                    <lightning:select name="select1"  value="{!v.selectedCompany}" label="Order To Company*" onchange="{!c.OrderToCompany}">
+                                        <option value="NULL" text="NONE"></option>
+                                        <aura:iteration items="{!v.listOfCompanies}" var="fld" >
+                                            <option value="{!fld}" text="{!fld}"></option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </aura:set>
+                            </aura:If>
+                        </div>
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <aura:If isTrue="{!v.cartFlag}"> 
+                                <lightning:input value="{!v.selectedCurrency}" disabled="true" label="Preferred Currency"/>
+                                <aura:set attribute="else">
+                                    <lightning:select name="select1"  value="{!v.selectedCurrency}" label="Preferred Currency*" onchange="{!c.preferredCurrency}">
+                                        <option value="NULL" text="NONE"></option>
+                                        <aura:iteration items="{!v.listOfCurrency}" var="fld" >
+                                            <option value="{!fld}" text="{!fld}" selected="{!fld==v.selectedCurrency}"></option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </aura:set>
+                            </aura:If>
+                        </div>
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <lightning:select name="select1"  value="{!v.selectedFamily}" label="Family">
+                                <option value="NULL" text="NONE"></option>
+                                <aura:iteration items="{!v.fieldList}" var="fld" >
+                                    <option value="{!fld}" text="{!fld}"></option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>   
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <lightning:input value="{!v.searchKeyword}"
+                                             type="Search"
+                                             label="Keywords"
+                                             aura:id="searchField"
+                                             />
+                        </div>  
+                        <div class="slds-col slds-m-right_medium slds-m-top_large">
+                            <button class="slds-button slds-button_destructive slds-button_red" type="button" onclick="{!c.Search}"><span>Search</span></button>
+                        </div>
+                    </div>  
+                    <c:CatalogVertical aura:id="rfidBulkaddId" completeWrap="{!v.completeWrap.productList}" catalogVertical="{!v.catalogVertical}" onselectcustomeid="{!v.onselectcustomeid}" SelectedRetailerName="{!v.SelectedRetailer}" SelectedRetailerId="{!v.SelectedRetailercode}" selectedTab="{!v.selectedTab}"  displayPagination="{!v.displayPagination}"/>
+                </lightning:tab>-->
+                <!--EAS AND RFID End-->
+                <!--TLA Start-->
+                <!--<lightning:tab label="TLA" id="TLA" iconName="standard:macros" onactive="{!c.selectTab}">   
+                    <div class="slds-grid slds-p-bottom_small" style="border-bottom:2px solid #e0e0e0"> 
+                        <div class="slds-col slds-m-right_medium" style="width:30%;">
+                            <h2 class="tab-header"><b>Retailer Name : </b>{!v.SelectedRetailer}</h2>
+                            
+                        </div>
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <aura:If isTrue="{!v.cartFlag}">  
+                                <lightning:input value="{!v.selectedCompany}" disabled="true" label="Order To Company"/>
+                                <aura:set attribute="else"> 
+                                    <lightning:select name="select1"  value="{!v.selectedCompany}" label="Order To Company*" onchange="{!c.OrderToCompany}">
+                                        <option value="NULL" text="NONE"></option>
+                                        <aura:iteration items="{!v.listOfCompanies}" var="fld" >
+                                            <option value="{!fld}" text="{!fld}"></option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </aura:set>
+                            </aura:If>
+                        </div>
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <aura:If isTrue="{!v.cartFlag}"> 
+                                <lightning:input value="{!v.selectedCurrency}" disabled="true" label="Preferred Currency"/>
+                                <aura:set attribute="else">
+                                    <lightning:select name="select1"  value="{!v.selectedCurrency}" label="Preferred Currency*" onchange="{!c.preferredCurrency}">
+                                        <option value="NULL" text="NONE"></option>
+                                        <aura:iteration items="{!v.listOfCurrency}" var="fld" >
+                                            <option value="{!fld}" text="{!fld}" selected="{!fld==v.selectedCurrency}"></option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </aura:set>
+                            </aura:If>
+                        </div>
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <lightning:select name="select1"  value="{!v.selectedFamily}" label="Family">
+                                <option value="NULL" text="NONE"></option>
+                                <aura:iteration items="{!v.fieldList}" var="fld" >
+                                    <option value="{!fld}" text="{!fld}"></option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>   
+                        <div class="slds-col slds-m-right_medium" style="width:16%;">
+                            <lightning:input value="{!v.searchKeyword}"
+                                             type="Search"
+                                             label="Keywords"
+                                             aura:id="searchField"
+                                             />
+                        </div>  
+                        <div class="slds-col slds-m-right_medium slds-m-top_large">
+                            <button class="slds-button slds-button_destructive slds-button_red" type="button" onclick="{!c.Search}"><span>Search</span></button>
+                        </div>
+                    </div>  
+                    <c:CatalogVertical aura:id="tlaBulkaddId" completeWrap="{!v.completeWrap.productList}" catalogVertical="{!v.catalogVertical}" onselectcustomeid="{!v.onselectcustomeid}" SelectedRetailerName="{!v.SelectedRetailer}" SelectedRetailerId="{!v.SelectedRetailercode}" selectedTab="{!v.selectedTab}"  displayPagination="{!v.displayPagination}"/>
+                </lightning:tab>-->
+                <!--TLA End-->
+            </lightning:tabset>
+            <!--Tabset End -->
+            <!--Pagination Start-->
+            <!--<div class="pagination-area ">
+                <ul>       
+                    <li> <lightning:button disabled="{!v.RecordStart == 0}" variant="brand" aura:id="prevPage" label="Prev" onclick="{!c.handlePrev}" /></li>
+                    <li><a>{!v.RecordStart}-{!v.RecordEnd} of {!v.TotalRecords} | Page {!v.PageNumber} of {!v.TotalPages}</a></li>
+                    <li><lightning:button disabled="{!v.PageNumber == v.TotalPages}" aura:id="nextPage" variant="brand" label="Next" onclick="{!c.handleNext}"/>
+                    </li>
+                </ul>
+            </div>-->
+            <!--<aura:if isTrue="{!v.displayPagination}">
+                <div class="slds-text-align_center pagination-area">
+                    <c:PaginationComponentForInventory page="{!v.page}" pages="{!v.pages}" total="{!v.total}"/>
+                </div>
+            </aura:if>-->
+            <!--Pagination End
+            
+            
+               <table>
+                    <tbody><tr>
+                        <td>
+                            <a href="https://510001482.recs.igodigital.com/rr/v2/5f0d7e395a3ade0034483f69/l/1/demmo1001@gmail.com">
+                                <img src="https://510001482.recs.igodigital.com/rr/v2/5f0d7e395a3ade0034483f69/i/1/demmo1001@gmail.com"></img>
+                            </a>
+                            </td>
+                        <td>
+                            <img src="https://510002439.recs.igodigital.com/rr/v2/5f6c6b036a401c00371b406f/i/2/portal.admin@mainetti.com"></img>
+                            
+                        </td>
+                        <td>
+                            <img src="https://510002439.recs.igodigital.com/rr/v2/5f6c6b036a401c00371b406f/i/3/portal.admin@mainetti.com"></img>
+                        </td>
+                        <td>
+                            <img src="https://510002439.recs.igodigital.com/rr/v2/5f6c6b036a401c00371b406f/i/4/portal.admin@mainetti.com"/>
+                            
+                        </td>
+                        </tr>
+                    </tbody></table>-->
+          <aura:If isTrue="{!v.ShowRec}">
+          <lightning:card title="Recommendation for you..">  
+             <table>
+  <tbody><tr>
+    <td>
+        <a href="{!v.RecHrefUrl1}" target="_blank">
+        <img src="{!v.RecImgUrl1}"  style="height: 400px; Width=400px"/>
+        </a>
+    </td>
+    <td>
+        <a href="{!v.RecHrefUrl2}" target="_blank">
+       <img src="{!v.RecImgUrl2}" style="height: 400px; Width=400px"/>
+        </a>
+    </td>
+    <td>
+        <a href="{!v.RecHrefUrl3}" target="_blank">
+       <img src="{!v.RecImgUrl3}" style="height: 400px; Width=400px"/>
+        </a>
+    </td>
+    <td>
+        <a href="{!v.RecHrefUrl4}" target="_blank">
+       <img src="{!v.RecImgUrl4}" style="height: 400px; Width=400px"/>
+        </a>
+    </td>
+  </tr>
+</tbody></table> 
+            </lightning:card>
+            </aura:If>
+               
+        </aura:If>
+        <!--<aura:If isTrue="{!v.isShipcmp}">
+            <c:CatalogShipping SelectedRetailerName="{!v.SelectedRetailer}" SelectedRetailer="{!v.SelectedRetailercode}" />
+        </aura:If>-->
+        <aura:If isTrue="{!v.isShipcmp}">
+            <c:CatalogShipping DisplayCustDetail="{!v.onselectcustomeid}" Shipcmp="true" parentcmp="false"/>
+        </aura:If>
+        
+    </div>	
+</aura:component>

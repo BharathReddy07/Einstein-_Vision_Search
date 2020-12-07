@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#0070D2</headerColor>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <formFactors>Small</formFactors>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <label>Quote Development</label>
+    <navType>Standard</navType>
+    <tabs>Catalog_Order</tabs>
+    <tabs>Sales_Order__c</tabs>
+    <tabs>Sales_Order_Line_Items__c</tabs>
+    <tabs>standard-Pricebook2</tabs>
+    <tabs>standard-Product2</tabs>
+    <tabs>Product_Bundle__c</tabs>
+    <tabs>standard-Opportunity</tabs>
+    <tabs>Quote__c</tabs>
+    <tabs>Quote_Line__c</tabs>
+    <tabs>Ship_Bill_Address__c</tabs>
+    <tabs>Create_Product_Bundle</tabs>
+    <tabs>SBQQ__QuoteLine__c</tabs>
+    <tabs>UserRec__c</tabs>
+    <tabs>Web_Recommendation_Set_Up__c</tabs>
+    <tabs>Web_Recommendation_Detail__c</tabs>
+    <uiType>Lightning</uiType>
+    <utilityBar>Chat_console_UtilityBar</utilityBar>
+</CustomApplication>

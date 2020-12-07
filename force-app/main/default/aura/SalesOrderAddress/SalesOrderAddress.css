@@ -1,0 +1,45 @@
+.THIS .slds-icon-standard-product-required{
+    background:#a41f34!important;
+}
+.THIS h2
+{
+    color:#a90533;
+}
+h2.THIS 
+{
+    color:#a90533;
+}
+.THIS .slds-modal__container
+{
+    padding:.5rem !important;
+}
+.THIS .box-title {
+    display: flex;
+    position: relative;
+    top: -26px;
+    background: white;
+    padding: 0 10px;
+    color: #a90533;
+    margin-left: 10px;
+    font-weight:bold;
+}
+.THIS .disabled
+{
+    background-color: rgb(233, 234, 236);
+    border-color: rgb(196, 198, 202);
+}
+.THIS .hide-label label
+{
+    display:none;
+}
+.THIS .box-input
+{
+    height:32px;
+}
+.THIS label{
+    font-size:11px;
+}
+.THIS .slds-form-element__label
+{
+    font-size:11px;
+}

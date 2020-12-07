@@ -1,0 +1,90 @@
+.THIS th
+{
+    background: #f7f7f7 !important;
+    font-size: 11px;
+    text-transform: uppercase;
+    padding: 4px !important;
+    color:#000 !important;
+}
+.THIS .slds-button_icon-bare
+{
+    color:#a41f34;   
+}
+.THIS .color-area {
+    margin-bottom: 18px;
+    overflow: hidden
+}
+.THIS .color ul li {
+    border: 0 none;
+    float: left;
+    margin-right: 5px
+}
+.THIS .color ul li a {
+    clear: both;
+    background: #000000;
+    float: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    height: 20px;
+    width: 20px;
+    border: 1px solid #e0e0e0;
+}
+.THIS .slds-button_disabled
+{
+    background: #c9c7c5 !important;
+    border-color: #c9c7c5 !important;
+    color: #fff !important;
+}
+.THIS .slds-button_brand
+{
+    background:#a41f34;
+    border-color:#a41f34;
+}
+/*.THIS .slds-button_icon-bare:disabled
+{
+    color:rgb(217, 219, 221);
+}*/
+.THIS .slds-button_brand:hover
+{
+    background:#a41f34;
+    border-color:#a41f34;
+}
+
+.THIS .RED {
+    background: #e32b00;
+}
+.THIS .NATURAL {
+    background: #FFFFFF;
+}
+.THIS .WHITE {
+    background: #FFFFFF;
+}
+.THIS .ORANGE {
+    background: #ff9000;
+}
+.THIS .GREEN {
+    background: #8BC44A;
+}
+.THIS .YELLOW {
+    background: YELLOW;
+}
+.THIS .PURPLE {
+    background: PURPLE;
+}
+.THIS .GREY {
+    background: GREY;
+}
+.THIS .BROWN {
+    background: BROWN;
+}
+.THIS .slds-button_brand .slds-icon-text-default
+{
+    fill:white;
+}
+.THIS .boxx {
+    padding:20px;
+   width:100%;
+   height:200px;
+   border-radius:20px;
+}

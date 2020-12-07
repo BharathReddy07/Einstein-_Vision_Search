@@ -1,0 +1,46 @@
+<aura:component >
+    <aura:attribute name="AddressList" type="List" />
+    <aura:attribute name="addressType" type="String" />
+    <aura:attribute name="addressIndex" type="Integer" />
+    
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:registerEvent name="onaddressSelect" type="c:selectedsObjectRecordEvent"/>
+    
+    <aura:iteration items="{!v.AddressList}" var="Add" indexVar="ind">
+        <div class="slds-m-bottom--large1">
+            <article class="slds-tile slds-media">
+                <div class="slds-media__figure">
+                    <ui:inputCheckbox text="{!Add.Id}" value="{!Add.Is_Default__c}" name="{!ind}" change ="{!c.changeAddress}"/>
+                </div>
+                <div class="slds-media__body">
+                    
+                    <div class="slds-tile__detail">
+                        <dl class="slds-list_horizontal slds-wrap">
+                            <dt class="slds-item_label slds-text-color_weak slds-truncate" title="">Factory Name :</dt>
+                            <dd class="slds-item_detail slds-truncate" title=""><ui:outputText value="{!Add.Factory_Name__c}"/></dd>
+                            <dt class="slds-item_label slds-text-color_weak slds-truncate" title="">Street :</dt>
+                            <dd class="slds-item_detail slds-truncate" title=""><ui:outputText value="{!Add.Address_1__c}"/></dd>
+                            <dt class="slds-item_label slds-text-color_weak slds-truncate" title="">City :</dt>
+                            <dd class="slds-item_detail slds-truncate" title=""><ui:outputText value="{!Add.City__c}"/></dd>
+                            <dt class="slds-item_label slds-text-color_weak slds-truncate" title="">State :</dt>
+                            <dd class="slds-item_detail slds-truncate" title=""><ui:outputText value="{!Add.State__c}"/></dd>
+                            <dt class="slds-item_label slds-text-color_weak slds-truncate" title="">Country :</dt>
+                            <dd class="slds-item_detail slds-truncate" title=""><ui:outputText value="{!Add.Country__c}"/></dd>
+                            <dt class="slds-item_label slds-text-color_weak slds-truncate" title="">Postal Code:</dt>
+                            <dd class="slds-item_detail slds-truncate" title=""><ui:outputText value="{!Add.Postcode__c}"/></dd>
+                            <dt class="slds-item_label slds-text-color_weak slds-truncate" title="">Contact Name :</dt>
+                            <dd class="slds-item_detail slds-truncate" title=""><ui:outputText value="{!Add.Contact__c}"/></dd>
+                            <dt class="slds-item_label slds-text-color_weak slds-truncate" title="">Contact Number:</dt>
+                            <dd class="slds-item_detail slds-truncate" title=""><ui:outputText value="{!Add.Tel_No__c}"/></dd>
+                            <dt class="slds-item_label slds-text-color_weak slds-truncate" title="">Contact Email :</dt>
+                            <dd class="slds-item_detail slds-truncate" title=""><ui:outputText value="{!Add.Email_Address__c}"/></dd>
+                        </dl>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <hr/>
+    </aura:iteration>
+    
+    
+</aura:component>

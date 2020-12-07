@@ -1,0 +1,193 @@
+.THIS .img-zoom-container-inner
+{
+    width:100%;    
+    display:block;
+    padding:1rem;
+}
+.THIS .img-zoom-container-inner img
+{
+    width:100%;
+    display:block;    
+}
+.THIS .img-zoom-container-inner .myimage
+{
+    border: 1px solid #d4d4d4;
+}
+.THIS .img-zoom-container {
+    position: relative;
+    display: -webkit-box;
+}
+
+.THIS .img-zoom-lens {
+    position: absolute;
+    /*set the size of the lens:*/
+    width: 50px;
+    height: 50px;
+    cursor: crosshair;
+}
+
+.THIS .img-zoom-result {
+    box-shadow: 0 0 7px 2px rgba(23,84,116,0.18);
+    border: 1px solid #d4d4d4;
+    /*set the size of the result div:*/
+    width: 280px;
+    height: 280px;
+    position:relative;
+    z-index:4;
+    
+    margin:1rem;
+}
+.THIS .slds-button_red
+{
+    color: #fff;
+    background: #A90533;
+    text-transform:uppercase;
+    border-radius:0;
+    margin-left:10px;
+}
+.THIS .price
+{
+    color:#A90533;
+    font-weight:bold;
+    margin:5px;
+}
+.THIS .color-area {
+    margin-bottom: 18px;
+    overflow: hidden
+}
+.THIS .color ul li {
+    border: 0 none;
+    float: left;
+    margin-right: 5px
+}
+.THIS .color ul li a {
+    clear: both;
+    background: #000000;
+    float: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    height: 20px;
+    width: 20px;
+    border: 1px solid #e0e0e0
+}
+.THIS .RED {
+    background: #e32b00  !important;
+}
+.THIS .NATURAL {
+    background: #FFFFFF  !important;
+}
+.THIS .WHITE {
+    background: #FFFFFF  !important;
+}
+.THIS .ORANGE {
+    background: #ff9000  !important;
+}
+.THIS .GREEN {
+    background: #8BC44A  !important;
+}
+.THIS .YELLOW {
+    background: YELLOW  !important;
+}
+.THIS .PURPLE {
+    background: PURPLE  !important;
+}
+.THIS .GREY {
+    background: GREY  !important;
+}
+.THIS .BROWN {
+    background: BROWN  !important;
+}
+
+.THIS .color a:active
+{
+    box-shadow:0px 0px 2px 1.2px #a90533;
+}
+.THIS .color a:focus
+{
+    box-shadow:0px 0px 2px 1.2px #a90533;
+}
+.THIS .color a:target
+{
+    box-shadow:0px 0px 2px 1.2px #a90533;
+}
+.THIS .selected-color-icon
+{
+    margin-top: -27px;
+    z-index: 1;
+    position: relative;
+    top: 32px;
+}
+/*.THIS .selected-color-icon
+{
+position: absolute;
+margin-top: 6px;
+margin-left: 6px;
+z-index:1;
+}
+.THIS .selected-color-icon a
+{
+border-radius:21px;
+}*/
+.THIS .selected-color-icon a
+{
+    border-radius: 4px 0 0 4px;
+    width: 8px !important;
+    height: 32px !important;
+    margin-left: -6px;
+    margin-top: -6px;
+}
+.THIS .input-qty input
+{
+    padding-left:30px;
+}
+
+.THIS .pagination-area {
+    background: rgba(0,0,0,0) none repeat scroll 0 0;
+    border-top: 1px solid #eee;
+    margin: 10px 0 0;
+    padding-top: 20px;
+    text-align: center;
+    display: inline-block;
+    width: 100%
+}
+.THIS .pagination-area ul {
+    margin-bottom: 0px
+}
+.THIS .pagination-area ul li {
+    background: #f5f5f5;
+    color: #393939;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 30px;
+    margin: 0 0 0 5px;
+    border-radius: 0px
+}
+.THIS .pagination-area ul li a {
+    border: 1px solid #e0e0e0;
+    color: #363636;
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 0px;
+    transition: all .4s ease-out .2s;
+    padding:0 6px;
+}
+.THIS .pagination-area ul li a:hover {
+    background: #000000;
+    border: 1px solid #000000;
+    color: #fff;
+}
+.THIS .pagination-area ul li a.active {
+    background: #A90533;
+    border: 1px solid #A90533;
+    border-radius: 0px;
+    color: #fff;
+    transition: all .4s ease-out .2s
+}
+.THIS .white .slds-icon-text-default
+{
+    fill:white;
+}

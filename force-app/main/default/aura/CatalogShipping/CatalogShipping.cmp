@@ -1,0 +1,415 @@
+<aura:component controller="SOControllerNew"
+    implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+    access="global">
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+    <aura:method name="rerenderCart" action="{!c.doInit}" />
+    <aura:attribute name="bundleProductList" type="list" />
+
+
+    <aura:attribute name="SelectedRetailerName" type="String" />
+    <aura:attribute name="SelectedRetailer" type="String" />
+    <aura:attribute name="parentcmp" type="Boolean" default="false" />
+    <aura:attribute name="GetAddress" type="Boolean" default="false" />
+    <aura:attribute name="HideButtons" type="Boolean" default="true" />
+    <aura:attribute name="Shipcmp" type="Boolean" default="true" />
+    <aura:attribute name="DisplayCustDetail" type="String" />
+    <aura:attribute name="DisplayCartDetail" type="list" />
+    <aura:attribute name="ImgIndex" type="Integer" />
+    <aura:attribute name="ImgSrc" type="Integer" />
+    <aura:attribute name="QuantCount" type="Integer" default="1" />
+    <aura:attribute name="CartValue" type="Integer" default="0" />
+    <aura:attribute name="isOpen" type="boolean" default="false" />
+    <!--Added by seema -->
+    <aura:attribute name="AddandCone" type="Integer" default="0" />
+    <aura:attribute name="PlaceorderBtn" type="boolean" default="false" />
+    <aura:attribute name="confirmdataSection" type="boolean" default="false" />
+
+    <div class="slds-hide" aura:id="spinner">
+        <lightning:spinner style="position: fixed" alternativeText="Loading" size="large" />
+    </div>
+
+    <!--<aura:if isTrue="{!v.confirmdataSection}">
+        <div class="confirmdataSection">
+            <div class="slds-backdrop slds-backdrop_open"></div>
+            <div class="slds-notify_container slds-is-fixed">
+                <div class="slds-notify slds-notify_toast" style="background:white;color:black;padding:1%;">
+                    
+                    <div class="slds-notify__content" style="width:100%">
+                        <h2 class="slds-text-heading_x-small" style="font-family:sans-serif;">Some products are
+                            selected, but not added into Cart.<br />
+                            Click OK to add pending products to Cart.<br />
+                            Click Cancel to <span class="slds-text-color_destructive">DELETE</span> selected products
+                            and proceed to create Order.
+                        </h2>
+                        <div class="slds-m-top_medium slds-text-align_right" style="font-size:86%;">
+                            <lightning:button variant="brand" label="OK" class="slds-m-right_x-small" title="OK"
+                                onclick="{!c.confirmdata}" />
+                            <lightning:button variant="brand" label="CANCEL" title="CANCEL" onclick="{!c.deleteData}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aura:if>-->
+
+    <aura:If isTrue="{!v.Shipcmp}">
+    <lightning:layout>
+        <lightning:layoutItem class="boxx" padding="around-large">
+            <lightning:card class="slds-text-heading_Bold slds-card_boundary" title="Shopping Cart">
+                <!--<div  style="height:300px;">
+                    <div class="slds-scrollable_y" style="height:100%;">-->
+                <lightning:accordion>
+                    <!--<table class="slds-table slds-table-ifen-bordered slds-table-ifen-cell-buffer">-->
+                    <!--<thead>
+                                <tr class="slds-text-title-ifen-caps">
+                                    <th scope="col">
+                                        <div class="slds-truncate" Style="Edit" title="Product">Product </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Description">Description</div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Quantity">Quantity</div>
+                                    </th>
+                                    <th><b>Action</b></th>
+                                    
+                                </tr>                                
+                            </thead>-->
+                    <!--<tbody>-->
+                    <aura:iteration items="{!v.DisplayCartDetail}" var="cartDetail" indexVar="ind">
+                        <!--<aura:If isTrue="{!cartDetail.soli.Product_Type__c != 'Bundle'}">-->
+                            <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row" data-label="Child_Product">
+                                            <div class="slds-truncate" align='center'>
+                                                <img src="{!cartDetail.soli.Product_image_url__c}" alt="Product"
+                                                    width="110" />
+                                            </div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <p><b style="width:140px;display:inline-block;">Product Name </b><span
+                                                    style="color:#a41f34;">: {!cartDetail.soli.Product_Name__c}</span>
+                                            </p>
+                                            <p><b style="width:140px;display:inline-block;">Product Code </b><span
+                                                    style="color:#a41f34;">: {!cartDetail.soli.Product_Code__c}</span>
+                                            </p>
+                                            <p class="slds-truncate"><b style="width:140px;display:inline-block;">Description
+                                                </b>: {!cartDetail.soli.Product_Description__c}
+                                            </p>
+                                            <aura:If isTrue="{!cartDetail.soli.Product_Type__c != 'Bundle'}">
+                                                <p><b style="width:140px;display:inline-block;">Price </b><span
+                                                    style="color:#a41f34;">: {!cartDetail.soli.Price__c}</span>
+                                                </p>
+                                            </aura:If>
+                                            
+                                            
+                                        </td>
+                                        <td data-label="Close Date">
+                                            <lightning:input type="number" aura:id="myInput" name="{!ind}"
+                                                value="{!cartDetail.soli.Quantity__c}"
+                                                onchange="{!c.CalculateBoxQty}" />
+                                        </td>
+
+                                        <td data-label="Amount" style="text-align:center;">
+                                            <lightning:buttonIcon name="{!ind}" iconName="utility:delete" size="large"
+                                                variant="bare" onclick="{!c.deleteProduct}" alternativeText="Remove" />
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <aura:If isTrue="{!cartDetail.soli.Product_Type__c == 'Bundle'}">
+                                <lightning:accordionSection name="{!cartDetail.soli.Product_Name__c}"
+                                    label="{!'View bundle detail for above ' + cartDetail.soli.Product_Name__c}">
+                                    <aura:iteration items="{!cartDetail.bundleProducts}" var="bundle" indexVar="key">
+                                        <div>
+                                            <td>
+                                                <img src="{!bundle.Child_Product__r.Product_image_url__c}" alt="Product"
+                                                    width="110" /> &nbsp; &nbsp;
+                                            </td>
+                                            <td>
+                                                <p><b style="width:80px;display:inline-block;">Code
+                                                    </b><span style="color:#a41f34;">:
+                                                        {!bundle.Child_Product__r.ProductCode}</span></p>
+                                                <p class="slds-truncate"><b
+                                                        style="width:80px;display:inline-block;">Description
+                                                    </b>: {!bundle.Child_Product__r.Description}</p>
+                                                <p class="slds-truncate"><b
+                                                        style="width:80px;display:inline-block;">Quantity
+                                                    </b>: {!bundle.Quantity__c}</p>
+                                                <p class="slds-truncate"><b
+                                                        style="width:80px;display:inline-block;">Price
+                                                    </b>: {!bundle.Price__c}</p>
+                                            </td>
+                                        </div>
+                                    </aura:iteration>
+                                </lightning:accordionSection>
+                            </aura:If>
+                            <br/>
+
+                            <!--<aura:set attribute="else">
+                                <lightning:accordionSection name="{!cartDetail.soli.Product_Name__c}"
+                                    label="{!cartDetail.soli.Product_Name__c}">
+                                    <aura:iteration items="{!cartDetail.bundleProducts}" var="bundle" indexVar="key">
+                                        <table class="slds-table slds-table-ifen-bordered slds-table-ifen-cell-buffer">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <img src="{!bundle.Child_Product__r.Product_image_url__c}"
+                                                            alt="Product" width="110" />
+                                                    </td>
+                                                    <td>
+                                                        <p><b style="width:140px;display:inline-block;">Product Code
+                                                            </b><span style="color:#a41f34;">:
+                                                                {!bundle.Child_Product__r.ProductCode}</span></p>
+                                                        <p class="slds-truncate"><b
+                                                                style="width:140px;display:inline-block;">Description
+                                                            </b>: {!bundle.Child_Product__r.Description}</p>
+                                                        <p class="slds-truncate"><b
+                                                                style="width:140px;display:inline-block;">Quantity
+                                                            </b>: {!bundle.Quantity__c}</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </aura:iteration>
+                                </lightning:accordionSection>                                
+                            </aura:set>-->
+                        <!--</aura:If>-->
+                    </aura:iteration>
+                    <!--</tbody>-->
+                    <!--</table>-->
+                </lightning:accordion>
+
+                <div class="slds-grid">
+                    <div class="slds-col">
+                        <lightning:button class="slds-button slds-button_brand slds-m-top_medium"
+                            iconName="utility:shopping_bag" variant="CONTINUE SHOPPING" label="CONTINUE SHOPPING"
+                            title="CONTINUE SHOPPING" onclick="{! c.BacktoCatalog}" />
+                    </div>
+                    <div class="slds-col">
+                        <aura:if isTrue="{!v.PlaceorderBtn}">
+                            <h3 class="slds-p-top_large"><b style="color:rgb(164, 31, 52);">Please click "Update
+                                    Cart"
+                                    to proceed...</b></h3>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-text-align_right">
+                        <lightning:button class="slds-button slds-button_brand slds-m-top_medium"
+                            iconName="utility:clear" variant="base" label="CLEAR CART" title="CLEAR CART"
+                            disabled="{! !v.HideButtons}" onclick="{! c.ClearItems }" />
+                        <aura:If isTrue="{!v.DisplayCartDetail.length>0}">
+                            <aura:If isTrue="{!v.HideButtons}">
+                                <lightning:button class="slds-button slds-button_brand slds-m-top_medium"
+                                    iconName="utility:record_update" variant="UPDATE CART" label="UPDATE CART"
+                                    title="UPDATE CART" onclick="{! c.UpdateCart}" />
+                                <lightning:button
+                                    class="{!v.PlaceorderBtn==true?'slds-button slds-button_brand slds-m-top_medium slds-button_disabled':'slds-button slds-button_brand slds-m-top_medium '}"
+                                    aura:id="placeorder" disabled="{!v.PlaceorderBtn}" iconName="utility:cart"
+                                    variant="PLACE ORDER" label="PLACE ORDER" title="PLACE ORDER"
+                                    onclick="{! c.placeOrders }" />
+                            </aura:If>
+                        </aura:If>
+                    </div>
+
+                </div>
+
+                <!--</div>
+                </div>-->
+            </lightning:card>
+        </lightning:layoutItem>
+    </lightning:layout>
+    </aura:If>
+    <!--<lightning:accordion>
+        <aura:If isTrue="{!v.Shipcmp}">
+            <div class="slds-grid slds-p-around_medium">
+                <div class="slds-col slds-box" style="font-size:11px;">
+                    <h2 class="slds-card__header-title slds-p-vertical_small"><b>SHOPPING CART</b></h2>
+
+                    <table
+                        class="slds-table slds-table_bordered slds-table_fixed-layout slds-table_col-bordered1 slds-table_resizable-cols "
+                        style="font-size:11px;">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Product">Product</div>
+                                </th>
+                                <th class="" scope="col" style="width:36%;">
+                                    <div class="slds-truncate" title="Description">Description</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Quantity">Quantity</div>
+                                </th>
+
+                                <th class="slds-text-align_center" scope="col" style="width:10%;">
+                                    <div class="slds-truncate" title="Action">Action</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <aura:iteration items="{!v.DisplayCartDetail}" var="cartDetail" indexVar="ind">
+                                <aura:If isTrue="{!cartDetail.soli.Product_Type__c != 'Bundle'}">
+                                    <tr class="slds-hint-parent">
+                                        <td data-label="Opportunity Name" scope="row">
+                                            <img src="{!cartDetail.soli.Product_image_url__c}" alt="Product"
+                                                width="110" />
+                                        </td>
+                                        <td data-label="Account Name">
+                                            <p><b style="width:140px;display:inline-block;">Product Name </b><span
+                                                    style="color:#a41f34;">: {!cartDetail.soli.Product_Name__c}</span>
+                                            </p>
+                                            <p><b style="width:140px;display:inline-block;">Product Code </b><span
+                                                    style="color:#a41f34;">: {!cartDetail.soli.Product_Code__c}</span>
+                                            </p>
+                                            <p class="slds-truncate"><b
+                                                    style="width:140px;display:inline-block;">Description
+                                                </b>: {!cartDetail.soli.Product_Description__c}</p>
+                                        </td>
+                                        <td data-label="Close Date">
+                                            <lightning:input type="number" aura:id="myInput" name="{!ind}"
+                                                value="{!cartDetail.soli.Quantity__c}"
+                                                onchange="{!c.CalculateBoxQty}" />
+                                        </td>
+
+                                        <td data-label="Amount" style="text-align:center;">
+                                            <lightning:buttonIcon name="{!ind}" iconName="utility:delete" size="large"
+                                                variant="bare" onclick="{!c.deleteProduct}" alternativeText="Remove" />
+
+                                        </td>
+                                    </tr>
+                                    <aura:set attribute="else">
+                                        <lightning:accordionSection name="{!cartDetail.soli.Product_Name__c}"
+                                            label="{!cartDetail.soli.Product_Name__c}">
+                                            <aura:iteration items="{!cartDetail.bundleProducts}" var="bundle"
+                                                indexVar="key">
+                                                <tr class="slds-hint-parent">
+                                                    <td data-label="Opportunity Name" scope="row">                                                    
+                                                        <img src="{!bundle.Child_Product__r.Product_image_url__c}" alt="Product" width="110"/>
+                                                    </td>                                                
+                                                    <td data-label="Account Name">                                                    
+                                                        <p><b style="width:140px;display:inline-block;">Product Code
+                                                            </b><span style="color:#a41f34;">:
+                                                                {!bundle.Child_Product__r.ProductCode}</span></p>
+                                                        <p class="slds-truncate"><b
+                                                                style="width:140px;display:inline-block;">Description
+                                                            </b>: {!bundle.Child_Product__r.Description}</p>
+                                                            <p class="slds-truncate"><b
+                                                                style="width:140px;display:inline-block;">Quantity
+                                                            </b>: {!bundle.Quantity__c}</p>
+                                                    </td>                                                
+                                                </tr>
+                                            </aura:iteration>
+                                        </lightning:accordionSection>
+                                    </aura:set>
+                                </aura:If>
+
+                            </aura:iteration>
+                        </tbody>
+
+                    </table>
+
+                    <div class="slds-grid">
+                        <div class="slds-col">
+                            <lightning:button class="slds-button slds-button_brand slds-m-top_medium"
+                                iconName="utility:shopping_bag" variant="CONTINUE SHOPPING" label="CONTINUE SHOPPING"
+                                title="CONTINUE SHOPPING" onclick="{! c.BacktoCatalog}" />
+                        </div>
+                        <div class="slds-col">
+                            <aura:if isTrue="{!v.PlaceorderBtn}">
+                                <h3 class="slds-p-top_large"><b style="color:rgb(164, 31, 52);">Please click "Update
+                                        Cart"
+                                        to proceed...</b></h3>
+                            </aura:if>
+                        </div>
+                        <div class="slds-col slds-text-align_right">
+                            <lightning:button class="slds-button slds-button_brand slds-m-top_medium"
+                                iconName="utility:clear" variant="base" label="CLEAR CART" title="CLEAR CART"
+                                disabled="{! !v.HideButtons}" onclick="{! c.ClearItems }" />
+                            <aura:If isTrue="{!v.DisplayCartDetail.length>0}">
+                                <aura:If isTrue="{!v.HideButtons}">
+                                    <lightning:button class="slds-button slds-button_brand slds-m-top_medium"
+                                        iconName="utility:record_update" variant="UPDATE CART" label="UPDATE CART"
+                                        title="UPDATE CART" onclick="{! c.UpdateCart}" />
+                                    <lightning:button
+                                        class="{!v.PlaceorderBtn==true?'slds-button slds-button_brand slds-m-top_medium slds-button_disabled':'slds-button slds-button_brand slds-m-top_medium '}"
+                                        aura:id="placeorder" disabled="{!v.PlaceorderBtn}" iconName="utility:cart"
+                                        variant="PLACE ORDER" label="PLACE ORDER" title="PLACE ORDER"
+                                        onclick="{! c.placeOrders }" />
+                                </aura:If>
+                            </aura:If>
+                        </div>
+
+                    </div>
+                    <div>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="slds-p-around_small">
+                <section class="main-container col1-layout">
+                    <div class="actions">
+                    </div>
+                </section>
+            </div>
+        </aura:If>
+    </lightning:accordion>-->
+
+    <!--<div class="slds-grid slds-p-around_medium">
+        <div class="slds-col slds-box" style="font-size:11px;">
+            <h2 class="slds-card__header-title slds-p-vertical_small"><b>Bundle Products</b></h2>
+
+            <table
+                class="slds-table slds-table_bordered slds-table_fixed-layout slds-table_col-bordered1 slds-table_resizable-cols "
+                style="font-size:11px;">
+                
+                <tbody>
+                    <aura:iteration items="{!v.DisplayCartDetail}" var="cartProd" indexVar="ind">
+                        <lightning:accordion>
+                            <aura:If isTrue="{!cartProd.Product__r.Product_Type__c == 'Bundle'}">
+                                <lightning:accordionSection name="{!cartProd.Product_Name__c}"
+                                    label="{!cartProd.Product_Name__c}">
+                                    <aura:iteration items="{!v.bundleProductList}" var="bundle">
+                                        <aura:if isTrue="{!cartProd.Product__c == bundle.Parent_Product__c}">
+                                            <tr class="slds-hint-parent">
+                                                <td data-label="Opportunity Name" scope="row">                                                    
+                                                    <img src="{!bundle.Child_Product__r.Product_image_url__c}" alt="Product" width="110"/>
+                                                </td>                                                
+                                                <td data-label="Account Name">                                                    
+                                                    <p><b style="width:140px;display:inline-block;">Product Code
+                                                        </b><span style="color:#a41f34;">:
+                                                            {!bundle.Child_Product__r.ProductCode}</span></p>
+                                                    <p class="slds-truncate"><b
+                                                            style="width:140px;display:inline-block;">Description
+                                                        </b>: {!bundle.Child_Product__r.Description}</p>
+                                                        <p class="slds-truncate"><b
+                                                            style="width:140px;display:inline-block;">Quantity
+                                                        </b>: {!bundle.Quantity__c}</p>
+                                                </td>                                                
+                                            </tr>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </lightning:accordionSection>
+                            </aura:If>
+                        </lightning:accordion>
+                    </aura:iteration>
+                </tbody>
+            </table>            
+        </div>
+    </div>-->
+
+
+    <aura:If isTrue="{!v.GetAddress}">
+        <c:SalesOrderAddress AddressPopUpFlag="{!v.GetAddress}" CustomerInfoID="{!v.DisplayCustDetail}"
+            OrderSource="CATALOG" retailerName="{!v.SelectedRetailerName}" retailerCodeId="{!v.SelectedRetailer}" />
+    </aura:If>
+    <!--<aura:If isTrue="{!v.parentcmp}">
+        <c:CatalogOrder parentcmp="{!v.parentcmp}" SelectedRetailercode="{!v.SelectedRetailer}" SelectedRetailer="{!v.SelectedRetailerName}"/>
+    </aura:If>-->
+    <aura:If isTrue="{!v.parentcmp}">
+        <c:CatalogOrder parentcmp="{!v.parentcmp}" />
+    </aura:If>
+</aura:component>

@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="Event template" >
+    <aura:attribute name="flag" type="String" default=""/>
+     <aura:attribute name="sizehanger" type="boolean" default="false"/>
+</aura:event>

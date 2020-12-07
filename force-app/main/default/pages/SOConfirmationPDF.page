@@ -1,0 +1,269 @@
+<apex:page standardController="Sales_Order__c" extensions="SOConfirmationPDFCtrl" renderAs="pdf" applyBodyTag="false">
+    
+    <head>
+        <style type="text/css">
+            body { font-family: Arial Unicode MS;font-size:10px; }
+            pre{font-family: Arial Unicode MS;vertical-align:top; white-space: pre-line;word-break: break-word;}
+            table{width:100%;border-collapse: collapse;font-size:10px;}
+            th{border:1px solid gray;background:#dcdcdc;}
+            th,td{padding:4px;vertical-align:top;}
+            .mainetti-logo{margin-bottom:20px;display:block;}
+            tr{ page-break-inside:avoid; }
+            
+        </style>
+    </head>
+    
+    <!--<apex:image url="{!$Resource.Kasetti_logo}" width="240" styleClass="mainetti-logo"/>-->
+    <table border="1">
+        <tr>
+            <td width="50%">Order No : <span>{!SOId}</span></td>
+            <td width="50%">Order Date : <span><apex:outputText value="{0, date, dd-MM-yyyy}"><apex:param value="{!SOcreatedDate}" /></apex:outputText></span></td>
+        </tr>
+        <tr>
+            <td>Internal No : <span>{!SORec.Id}</span></td>
+            <td>Company : <span>{!SORec.Company__c}</span></td>
+        </tr>
+        <tr>
+            <td width="50%">External No : <span>{!SORec.Id}</span></td>
+            <td>Currency : <span>{!SORec.Currency__c}</span></td>
+        </tr>
+    </table>
+    <br/>
+    <table border="1">
+        <tr>
+            <th width="50%">Bill To :</th>
+            <th width="50%">Ship To :</th>
+            
+        </tr>
+        <tr>
+            <td>
+                <span>                   
+                    {!billToAdd.Factory_Name__c}<br/>
+                    {!billToAdd.City__c}, {!billToAdd.State__c}<br/>
+                    {!billToAdd.Country__c}<br/>
+                    PostalCode: {!billToAdd.Postcode__c}<br/><br/>
+                </span>
+            </td>
+            <td>
+                <span>
+                    {!shipToAdd.Factory_Name__c}<br/>
+                    {!shipToAdd.City__c}, {!shipToAdd.State__c}<br/>
+                    {!shipToAdd.Country__c}<br/>
+                    PostalCode: {!shipToAdd.Postcode__c}<br/><br/>
+                    
+                </span>
+            </td>
+        </tr>
+    </table>
+    <br/>
+    <!--<apex:outputPanel rendered="{!suzhouFlag}">
+        <table border="1" >
+            <tr>
+                <th width="50%">Buyer :</th>
+                <th width="50%">Invoice To :</th>
+                
+            </tr>
+            <tr>
+                <td>
+                    <span>    
+                        {!buyerToAdd.Factory_Name__c}<br/>
+                        {!buyerToAdd.Address_1__c} {!buyerToAdd.Address_2__c}<br/>
+                        {!buyerToAdd.City__c}, {!buyerToAdd.State__c}<br/>
+                        {!buyerToAdd.Country__c}<br/>
+                        PostalCode: {!buyerToAdd.Postcode__c}<br/><br/>
+                        Contact: {!buyerToAdd.Contact__c}<br/>
+                        Tel: {!buyerToAdd.Tel_No__c}<br/>
+                        Email: {!buyerToAdd.Email_Address__c}
+                    </span>
+                </td>
+                <td>
+                    <span>  
+                        {!invToAdd.Factory_Name__c}<br/>
+                        {!invToAdd.Address_1__c} {!invToAdd.Address_2__c}<br/>
+                        {!invToAdd.City__c}, {!invToAdd.State__c}<br/>
+                        {!invToAdd.Country__c}<br/>
+                        PostalCode: {!invToAdd.Postcode__c}<br/><br/>
+                        Contact: {!invToAdd.Contact__c}<br/>
+                        Tel: {!invToAdd.Tel_No__c}<br/>
+                        Email: {!invToAdd.Email_Address__c}
+                        
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </apex:outputPanel>-->
+    <br/>
+    <table border="1">
+        <tr><th colspan="3">Enquiry Details</th></tr>
+        <!--<tr>
+            <td>Retailer :  {!retailerName}</td>
+            <td>Supplier Code : {!SupplierCode} </td>
+            <td>Manufacturer Code : {!ManufacturerCode} </td>           
+        </tr>-->
+        <tr>
+            <td>Enquiry Id :  <span>{!SORec.Id}</span></td>
+            <td>Enquiry No :  <span>{!SORec.Id}</span></td>            
+            <td>Enquiry version : <span>{!SORec.Id}</span></td>
+        </tr>
+        <tr>
+            <th colspan="3">Delivery Details</th>
+        </tr>
+    </table>
+    <table border="1">
+        <tr>
+            <td width="50%">Delivery Instruction: {!SORec.Delivery_Instruction__c}</td>
+            <td width="50%">Expected Ex-Factory Date:  <apex:outputText value="{0, date, dd-MM-yyyy}"><apex:param value="{!SORec.Expected_Delivery_Date__c}" /></apex:outputText></td>
+        </tr>    
+    </table>
+    <br/>
+
+    <table border="1">
+        <tr>
+            <th>Model</th>
+            <th>Visual</th>
+            <!--<th>Color</th>-->
+            <th>Product Description </th>
+
+            <th style="display:{!IF( isLabelOrRFID, '' , 'None')}">Barcode</th>
+            <th style="display:{!IF( isLabelOrRFID, '' , 'None')}">Size</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th style="display:{!IF( isprice, '' , 'None')}">Price/100pcs <br />(Ex-Work, without VAT)</th>
+            <th style="display:{!IF( isprice, '' , 'None')}">Amount <br />({!SORec.Currency__c})</th>
+        </tr>
+
+        <apex:repeat value="{!shipWrapList}" var="shipWrap">
+            <tr>
+                <td>
+                    <apex:outputPanel rendered="{!isSoliLink != '1'}">
+                        <apex:outputText value="{!shipWrap.soli.Product_Code__c}" />
+                    </apex:outputPanel>
+                </td>
+                <td>
+                    <img src="{!shipWrap.soli.Product_image_url__c}" alt="Product" width="80" />
+                </td>
+                <!--<td>
+                    <apex:outputText value="{!shipWrap.soli.Product_Code__c}" />
+                </td>-->
+                <td>
+                    <apex:outputText value="{!shipWrap.soli.Product_Description__c}" />
+                </td>
+                <td>
+                    <apex:outputText value="{!shipWrap.soli.Quantity__c}" />
+                </td>
+                <td>
+                    <apex:outputText value="{!shipWrap.soli.Price__c}" />
+                </td>
+            </tr>
+
+            <tr style="{!IF((shipWrap.soli.Product_Type__c == 'Bundle'),'','display:none')}">
+                <th>Bundle detail for {!shipWrap.soli.Product_Code__c}</th>
+                <th>Info</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <apex:repeat value="{!shipWrap.bundleProducts}" var="bundle">
+                    
+                    <tr>
+                        <td>
+                            <img src="{!bundle.Child_Product__r.Product_image_url__c}" alt="Product" width="80" />
+                        </td>
+                        <td>
+                            <p><b style="width:80px;display:inline-block;">Code
+                                </b><span style="color:#a41f34;">:
+                                    {!bundle.Child_Product__r.ProductCode}</span></p>
+                            <p class="slds-truncate"><b style="width:80px;display:inline-block;">Description
+                                </b>: {!bundle.Child_Product__r.Description}</p>
+                            <p class="slds-truncate"><b style="width:80px;display:inline-block;">Quantity
+                                </b>: {!bundle.Quantity__c}</p>
+                        </td>
+                        <td><apex:outputText value="{!shipWrap.soli.Product_Description__c}" /></td>
+                        <td><apex:outputText value="{!bundle.Quantity__c}" /></td>
+                        <td><apex:outputText value="{!bundle.Price__c}" /></td>
+                    </tr>
+                </apex:repeat>
+        </tr>
+        </apex:repeat>
+    </table>
+
+
+
+    <!--<table border="1">
+        <tr>
+            <th>Model</th>
+            <th>Visual</th>
+            <th>Color</th>
+            <th>Product Description </th>                       
+            <th style="display:{!IF( isLabelOrRFID, '' , 'None')}">Barcode</th>
+            <th style="display:{!IF( isLabelOrRFID, '' , 'None')}">Size</th>  
+            <th>Quantity</th>
+            <th style="display:{!IF( isprice, '' , 'None')}">Price/100pcs <br/>(Ex-Work, without VAT)</th> 
+            <th style="display:{!IF( isprice, '' , 'None')}">Amount <br/>({!SORec.Currency__c})</th> 
+        </tr>
+        <apex:repeat value="{!SOLIRecs}" var="soli">
+            <tr>
+                <td>                    
+                    <apex:outputPanel rendered="{!isSoliLink != '1'}">
+                        <apex:outputText value="{!soli.Product_Code__c}"/>
+                    </apex:outputPanel>                    
+                </td>
+                <td>
+                    <img src="{!soli.Product_image_url__c}" alt="Product" width="80"/>
+                </td>
+                <td>
+                    <apex:outputText value="{!soli.Product_Code__c}"/>
+                </td>
+                <td>
+                    <apex:outputText value="{!soli.Product_Description__c}"/>
+                </td>
+                <td>
+                    <apex:outputText value="{!soli.Quantity__c}"/>
+                </td>                
+            </tr>            
+        </apex:repeat>        
+    </table>-->
+    <table border="1" style="display:{!IF( isprice, '' , 'None')}">
+        <tr><td style="text-align:right;font-weight:bold"><span style="margin-right:15px;">Total :</span> <strong >
+            <apex:outputText value="{!LEFT(SORec.Currency__c,3)}"/>
+            <apex:outputText value="{0, number, ###,##0.00}">
+                <apex:param value="{!total}"/>
+            </apex:outputText>
+            </strong></td></tr>
+    </table>
+    <br/><br/>
+    <table border="1">
+        <tr>
+            <th>Forwarder/Transportation Details</th>
+            <th>Shipping Mark/Special Instruction</th>
+            
+        </tr>
+        <tr>
+            <td width="50%"><pre>{!SORec.Transportation_Details__c}</pre></td>
+            <td width="50%"><pre>{!SORec.Shipping_Mark__c}</pre></td>
+        </tr>    
+    </table>
+    <br/>
+    <!--apex:outputText value="{!retailerCode}"/>   
+<!--{!IF({!isBrandedChannel},"SOMECONTENT", "SOMEOTHERCONTENT")}
+
+<h3><b><u>Special Terms and Conditions</u></b></h3>
+<p style="border:1px solid black;padding:4px;">{{!IF({!retailerCode},  {!termConditions} , ""}
+</p-->
+    
+    <!--<apex:outputPanel rendered="{!retailerCode}">
+        <h3><b><u>Special Terms and Conditions</u></b></h3>
+        <div style="border:1px solid black;padding:4px 8px;">
+            <pre>{!termConditions}</pre>
+        </div>
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!NOT(retailerCode)}">
+        
+    </apex:outputPanel>-->
+    <apex:outputPanel >
+        <h3><b><u>Special Terms and Conditions</u></b></h3>
+        <div style="border:1px solid black;padding:4px 8px;">
+            <pre>{!templateBody}</pre>
+        </div>
+    </apex:outputPanel>
+    
+</apex:page>

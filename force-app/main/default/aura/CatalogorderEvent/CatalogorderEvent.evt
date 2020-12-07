@@ -1,0 +1,7 @@
+<aura:event type="APPLICATION" description="Event template" >
+    <aura:attribute name="Email" type="string"/>
+   <aura:attribute name="Pass_Result" type="String"/>
+
+    
+    
+</aura:event>

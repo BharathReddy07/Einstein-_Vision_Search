@@ -1,0 +1,6 @@
+<aura:event type="APPLICATION">
+    <aura:attribute name="eventAttributeName" type="String"/>
+     <!--<aura:attribute name="eventAttributeSearch" type="String"/>-->
+     <aura:attribute name="eventAttributeCustId" type="String"/>
+    <aura:attribute name="eventAttributeuser" type="String"/>
+</aura:event>

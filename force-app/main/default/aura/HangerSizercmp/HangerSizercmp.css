@@ -1,0 +1,54 @@
+.THIS .label-hidden label{display:none;}
+.THIS th{background:#f4f4f4;}
+.THIS .img-zoom-container-inner
+{
+    width:100%;    
+    display:block;
+    padding:1rem;
+}
+.THIS .img-zoom-container-inner img
+{
+    width:100%;
+    display:block;    
+}
+.THIS .img-zoom-container-inner .myimage
+{
+    border: 1px solid #d4d4d4;
+}
+.THIS .img-zoom-container {
+    position: relative;
+    display: -webkit-box;
+}
+
+.THIS .img-zoom-lens {
+    position: absolute;
+    /*set the size of the lens:*/
+    width: 50px;
+    height: 50px;
+    cursor: crosshair;
+}
+
+.THIS .img-zoom-result {
+    box-shadow: 0 0 7px 2px rgba(23,84,116,0.18);
+    border: 1px solid #d4d4d4;
+    /*set the size of the result div:*/
+    width: 280px;
+    height: 280px;
+    position:relative;
+    z-index:4;
+    
+    margin:1rem;
+}
+.THIS .slds-input,.THIS .slds-select
+{
+        height: 22px;
+    min-height: 22px;
+}
+.THIS .slds-select_container:before,.THIS.slds-select_container:before
+{
+    top:6px !important; 
+}
+.THIS .slds-select_container:after,.THIS.slds-select_container:after
+{
+    bottom:4px !important;
+}

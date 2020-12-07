@@ -1,0 +1,157 @@
+<aura:component controller="SOControllerNew" access="global">
+    
+    <aura:attribute name="retailerName" type="String" />
+    <aura:attribute name="retailerCodeId" type="String" />
+    <aura:attribute name="CustomerInfoID" type="String" />
+    <aura:attribute name="shipTermList" type="List" />
+    <aura:attribute name="companyList" type="List" />
+    <aura:attribute name="currencyList" type="List" />
+    <aura:attribute name="templateList" type="List" />
+    <!-- Address -->
+    <aura:attribute name="BillAddressList" type="List" />
+    <aura:attribute name="ShipAddressList" type="List" />
+    <aura:attribute name="BuyerAddressList" type="List" />
+    <aura:attribute name="InvoiceAddressList" type="List" />
+    <aura:attribute name="AddressPopUpFlag" type="boolean" default="false" description="Used to close this pop up"/>
+    <aura:attribute name="BillAddressIndex" type="integer" default="0" />
+    <aura:attribute name="ShipAddressIndex" type="integer" default="0" />
+    <aura:attribute name="BuyerAddressIndex" type="integer" default="0" />
+    <aura:attribute name="InvoiceAddressIndex" type="integer" default="0" />
+    <aura:attribute name="OrderSource" type="String" />
+    <aura:attribute name="suzhouFlag" type="Boolean" default="false"/>
+    <aura:attribute name="salesOrderObj" type="Sales_Order__c" default="{ 'sobjectType': 'Sales_Order__c' }"/>
+    <!-- PO to SO -->
+    <aura:attribute name="comfirmPOList" type="Object"/>
+    <aura:handler name="onaddressSelect" event="c:selectedsObjectRecordEvent" action="{!c.changeAddress}"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <!-- Catalog -->
+    <aura:attribute name="companyName" type="String"/>
+    <aura:attribute name="currencyName" type="String"/>
+    <aura:attribute name="seasonList" type="List" />
+    <aura:attribute name="seasonYearList" type="List" />
+    <aura:attribute name="divisionList" type="List" />
+    <aura:attribute name="ExpectedDeliveryDate" type="Date" />
+    
+    <div class="slds-hide" aura:id="spinner">
+        <lightning:spinner style="position: fixed" alternativeText="Loading" size="large" />
+    </div>
+
+    <div role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open" style="Max-width">
+        <div class="slds-modal__container" style="max-width: 100%;width: 96%;font-size:11px;">
+            <div class="slds-modal__header slds-p-around--x-small">
+                <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModal}">
+                    X<span class="slds-assistive-text">Cancel</span>
+                </button>
+                <h2 class="slds-text-heading--medium" style="font-size:17px;">
+                    
+                    <aura:if isTrue="{!v.OrderSource == 'PO'}">
+                        Confirm Purchase Order
+                        <aura:set attribute="else">
+                            Confirm Sales Order
+                        </aura:set>
+                    </aura:if>
+                </h2>
+            </div>
+            
+            
+            <!-- Bill to and ship adress starts-->
+            <div class="slds-modal__content slds-p-around--x-small"> 
+                <div class="slds-box slds-m-around--small1">
+                    <h2 class="box-title" style="width:62px">Details</h2>
+                    <div class="slds-grid slds-wrap slds-gutters" style="margin-top:-20px;">
+                        <!--<aura:if isTrue="{!v.OrderSource == 'PO'}">-->
+                            
+                            <div class="slds-col slds-size_1-of-3 slds-truncate slds-m-bottom--x-small1">
+                                <lightning:select name="select1"  value="{!v.salesOrderObj.Company__c}" title="{!v.salesOrderObj.Company__c}"  label="Company" onchange="{!c.OrderToCompany}" required="true">
+                                    <option value="NULL" text="NONE"></option>                                    
+                                    <aura:iteration items="{!v.companyList}" var="fld" >
+                                        <option value="{!fld}" text="{!fld}" selected="{!fld==v.salesOrderObj.Company__c}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3 slds-truncate slds-m-bottom--x-small1">
+                                <lightning:select name="select1"  value="{!v.salesOrderObj.Currency__c}" title="{!v.salesOrderObj.Currency__c}" label="Currency" required="true">
+                                    <option value="NULL" text="NONE"></option>                                    
+                                    <aura:iteration items="{!v.currencyList}" var="fld" >
+                                        <option value="{!fld}" text="{!fld}" selected="{!fld==v.salesOrderObj.Currency__c}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div>                      
+                        <!--</aura:if>-->
+                        
+                        <div class="slds-col slds-size_1-of-3 slds-m-bottom--x-small1">
+                            <div class="slds-truncate ">
+                                <lightning:input type="date" aura:id="ExpectedDeliveryDate" name="ExpectedDeliveryDate" label=" Date" messageWhenValueMissing="Complete this field." value="{!v.salesOrderObj.Expected_Delivery_Date__c}" title="{!v.salesOrderObj.Expected_Delivery_Date__c}" onchange="{!c.changeDate}" required="true"/>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="slds-col slds-size_1-of-3 slds-truncate slds-m-bottom--x-small1">
+                            <lightning:input type="text" name="Factory Internal PO Number" label="Purchase Order" default="" value="{!v.salesOrderObj.Factory_Internal_PO__c}" title="{!v.salesOrderObj.Factory_Internal_PO__c}" />
+                        </div>
+                        
+                        <div class="slds-col slds-size_1-of-3 slds-truncate slds-m-bottom--x-small1">
+                            <lightning:select name="select1"  value="{!v.salesOrderObj.Delivery_Instruction__c}" title="{!v.salesOrderObj.Delivery_Instruction__c}" label="Delivery" required="true">
+                                <option value="NULL" text="NONE"></option>                                
+                               <aura:iteration items="{!v.shipTermList}" var="fld" >
+                                    <option value="{!fld}" text="{!fld}" selected="{!fld==v.salesOrderObj.Delivery_Instruction__c}"></option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-3 slds-truncate slds-m-bottom--x-small1">
+                            <lightning:select name="template"  value="{!v.salesOrderObj.Template__c}" label="Select Template" required="true">
+                                <option value="NULL" text="NONE"></option>                                
+                               <aura:iteration items="{!v.templateList}" var="fld" >
+                                    <option value="{!fld.Name}" text="{!fld.Name}" ></option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>
+                    </div>
+                </div>        
+                <br/>
+                
+                
+                <br/>
+                <div class="slds-box">
+                    <h2 class="box-title" style="width:200px;">Customer comment and Remarks</h2>
+                    <div class="slds-grid slds-wrap" style="margin-top:-20px;">
+                        <div class="slds-size_1-of-3 slds-m-right_x-small">                           
+                            <lightning:textarea rows="1" name="Transportation Details" label="Forwarder/Transportation Details" value="{!v.salesOrderObj.Transportation_Details__c}" title="{!v.salesOrderObj.Transportation_Details__c}"/>
+                        </div>
+                        <div class="slds-size_1-of-3 slds-m-left_x-small">
+                            <lightning:textarea rows="1" name="Shipping Mark" label="Special Instruction" value="{!v.salesOrderObj.Shipping_Mark__c}" title="{!v.salesOrderObj.Shipping_Mark__c}"/>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <lightning:layout >
+                    <lightning:layoutItem class="slds-p-right_x-small" size="6">
+                        <div class="slds-box slds-m-bottom_large">   
+                            <h2 class="box-title" style="width:62px">Bill To</h2>				
+                            <c:SalesOrderAddressTable AddressList="{!v.BillAddressList}" addressType="Bill"/>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem class="slds-p-left_x-small" size="6">
+                        <div class="slds-box slds-m-bottom_large">
+                            <h2 class="box-title" style="width:72px">Ship To</h2>
+                            <c:SalesOrderAddressTable AddressList="{!v.ShipAddressList}" addressType="Ship"/>
+                        </div>
+                    </lightning:layoutItem>
+                </lightning:layout >               
+            </div>
+            
+            <div class="slds-modal__footer slds-p-around--x-small">
+                <lightning:button class="slds-button slds-button--brand" iconName="utility:file" onclick="{!c.openPDF}">PDF</lightning:button>
+                <lightning:button class="slds-button slds-button--brand" iconName="utility:file" onclick="{!c.createQuote}">Create Quote</lightning:button>
+                <lightning:button class="slds-button slds-button--brand" iconName="utility:file" onclick="{!c.createOpportunity}">Create Opportunity</lightning:button>
+                <lightning:button class="slds-button slds-button--brand" iconName="utility:package_org" onclick="{!c.ConfirmOrder}">Confirm Order</lightning:button>
+                <lightning:button class="slds-button slds-button--neutral" iconName="utility:close" onclick="{!c.closeModal}">Cancel</lightning:button>
+                
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop--open"></div>
+    
+    
+</aura:component>
